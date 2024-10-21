@@ -1,0 +1,69 @@
+{% extends "layouts/main-layout.html" %}
+
+{% block body %}
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="section">
+                    <div class="flex justify-content-center align-content-center">
+                        <h3 class="card-title text-center">Contact Us</h3>
+                        <p class="text-center description">
+                            Contact Us with your queries, suggestions and questions. We will be very happy to hear from you.
+                        </p>
+                        {% if cf.errors %}
+                                <div class="alert alert-danger text-center">
+                                    <ul class="errors">
+                                        {% for field_name, field_errors in cf.errors|dictsort if field_errors %}
+                                            {% for error in field_errors %}
+                                                <li>{{ cf[field_name].label }}: {{ error }}</li>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                            {% with message = get_flashed_messages(category_filter=["message"]) %}
+                                {% if message %}
+                                    <div class="alert alert-success text-center">
+                                        {% for msg in message %}
+                                            <p>
+                                                {{ msg }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                            {% with message = get_flashed_messages(category_filter=["error"]) %}
+                                {% if message %}
+                                    <div class="alert alert-danger text-center">
+                                        {% for msg in message %}
+                                            <p>
+                                                {{ msg }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                        <form method="post" action="{{ url_for('contact_page') }}" class="contact-form">
+                            {{ cf.csrf_token }}
+                            <div class="form-group">
+                                {{ cf.full_name.label }}
+                                {{ cf.full_name(class_='form-control') }}
+                            </div>
+                            <div class="form-group">
+                                {{ cf.email.label }}
+                                {{ cf.email(class_='form-control') }}
+                            </div>
+                            <div class="form-group">
+                                {{ cf.message.label }}
+                                {{ cf.message(class_='form-control') }}
+                            </div>
+                            <div class="text-center">
+                                {{ cf.send(class_='btn btn-danger btn-round') }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

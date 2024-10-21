@@ -1,0 +1,179 @@
+{% extends "layouts/dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Polynomial Linear Regression <small class="card-category"> - Pakistan's {{ plr.Y_Label }} Prediction</small></h4>
+                </div>
+                <div class="card-body">
+                    <p id="chart"></p>
+                    <script>
+                        $(document).ready(function () {
+                            var graph = {{plr.chart_data | safe}};
+
+                            Plotly.plot(
+                                'chart',
+                                graph,
+                                {{ plr.chart_layout | safe }},
+                                {
+                                    showLink: false,
+                                    displaylogo: false,
+                                    showAxisDragHandles: false
+                                }
+                            );
+                        });
+                    </script>
+                    <h4>Accuracy : </h4>
+                    {% if plr.accuracy >= 80 %}
+                        <p class="lead text-success text-capitalize">High ( >= 80% ) : {{ plr.accuracy }}%</p>
+                        <p class="text-success">The model is providing high accuracy and is suitable for prediction.</p>
+                    {% elif plr.accuracy >= 50 %}
+                        <p class="lead text-warning text-capitalize">Medium ( >= 50% ) : {{ plr.accuracy }}%</p>
+                        <p class="text-warning">The model is providing medium accuracy and so it should be tuned or the
+                            training data should be increased before prediction.</p>
+                    {% else %}
+                        <p class="lead text-danger text-capitalize">Low ( < 50% ) : {{ plr.accuracy }}%</p>
+                        <p class="text-danger">The model is providing low accuracy and is not suitable for prediction
+                            and so the training data should be increased or try changing the variable being used for
+                            training.</p>
+                    {% endif %}
+                    {% if plrtf.errors %}
+                        <div class="alert alert-danger text-center">
+                            <ul class="errors">
+                                {% for field_name, field_errors in plrtf.errors|dictsort if field_errors %}
+                                    {% for error in field_errors %}
+                                        <li>{{ plrtf[field_name].label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <form class="form" method="post" action="{{ url_for('polynomial_linear_reg_page') }}">
+                        {{ plrtf.csrf_token }}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                {{ plrtf.feature.label }}
+                                {{ plrtf.feature(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{ plrtf.label.label }}
+                                {{ plrtf.label(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{ plrtf.degree.label }}
+                                {{ plrtf.degree(class_='form-control') }}
+                            </div>
+                        </div>
+                        <p>
+                            {{ plrtf.train(class_='btn btn-danger btn-round') }}
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Intercept</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ plr.intercept }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Slope</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{% for slope in plr.slope %}
+                        {{ slope }}
+                    {% endfor %}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">R<sup>2</sup></h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ plr.r2 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">MSQE</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ plr.msqe }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h2 class="card-title">Training Data</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Actual Price</h3>
+                    <div style="height: 10rem;" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ plr.X_Label }} (X)</th>
+                                <th>Actual {{ plr.Y_Label }} (Y)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for x,y in plr.X|zip(plr.Y) %}
+                                <tr>
+                                    <td>{{ x }}</td>
+                                    <td>{{ y }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h2 class="card-title">Predicted Data</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Predicted Price</h3>
+                    <div style="height: 10rem;" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ plr.X_Label }} (X)</th>
+                                <th>Predicted {{ plr.Y_Label }} (Z)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for x, z in plr.X|zip(plr.Predicted) %}
+                                <tr>
+                                    <td>{{ x }}</td>
+                                    <td>{{ z }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

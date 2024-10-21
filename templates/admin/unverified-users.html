@@ -1,0 +1,93 @@
+{% extends "layouts/admin-dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Hi, {{ session['full_name'] }}</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p class="lead">Welcome to Your ML Platform Admin dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart text-center">
+                <div class="card-header">
+                    <h4 class="card-title text-warning"><i class="fas fa-user-times"></i> Unverified Users</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Verified?</th>
+                                <th>Active?</th>
+                                <th>Registered At</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>
+                                        <a rel="tooltip" title="Edit User" data-placement="bottom"
+                                           data-original-title="Edit User"
+                                           href="{{ url_for('admin_edit_user_page', uid=user.id) }}"><i
+                                                class="fas fa-user-edit"></i></a> |
+                                        {% if user.active == 0 %}
+                                            <a rel="tooltip" title="Activate User" data-placement="bottom"
+                                               data-original-title="Activate User"
+                                               href="{{ url_for('admin_activate_user_page', uid=user.id) }}"><i
+                                                    class="fas fa-lock-open"></i></a> |
+                                        {% else %}
+                                            <a rel="tooltip" title="Deactivate User" data-placement="bottom"
+                                               data-original-title="Deactivate User"
+                                               href="{{ url_for('admin_deactivate_user_page', uid=user.id) }}"><i
+                                                    class="fas fa-user-lock"></i></a> |
+                                        {% endif %}
+                                        {% if user.verified == 0 %}
+                                            <a rel="tooltip" title="Verify User" data-placement="bottom"
+                                               data-original-title="Verify User"
+                                               href="{{ url_for('admin_verify_user_page', uid=user.id) }}"><i
+                                                    class="fas fa-user-check"></i></a> |
+                                        {% endif %}
+                                        <a rel="tooltip" title="Delete User" data-placement="bottom"
+                                           data-original-title="Delete User"
+                                           href="{{ url_for('admin_delete_user_page', uid=user.id) }}"><i
+                                                class="fas fa-user-times"></i></a>
+                                    </td>
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.full_name }}</td>
+                                    <td class="text-lowercase">{{ user.email }}</td>
+                                    <td>
+                                        {% if user.verified == 1 %}
+                                            <span class="text-success">Verified</span>
+                                        {% else %}
+                                            <span class="text-warning">Unverified</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if user.active == 1 %}
+                                            <span class="text-success">Active</span>
+                                        {% else %}
+                                            <span class="text-danger">Deactivated</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ user.time_created|datetime }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

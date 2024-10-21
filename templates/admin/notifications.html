@@ -1,0 +1,92 @@
+{% extends "layouts/admin-dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Hi, {{ session['full_name'] }}</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p class="lead">Welcome to Your ML Platform Admin dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart text-center">
+                <div class="card-header">
+                    <h4 class="card-title text-success"><i class="fas fa-bell"></i> All Notifications</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    {% with message = get_flashed_messages(category_filter=["message"]) %}
+                        {% if message %}
+                            <div class="alert alert-success text-center">
+                                {% for msg in message %}
+                                    <p>
+                                        {{ msg }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    {% with message = get_flashed_messages(category_filter=["error"]) %}
+                        {% if message %}
+                            <div class="alert alert-danger text-center">
+                                {% for msg in message %}
+                                    <p>
+                                        {{ msg }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Active?</th>
+                                <th>Description</th>
+                                <th>Created At</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for notification in notifications %}
+                                <tr>
+                                    <td>
+                                        {% if notification.active == 0 %}
+                                            <a rel="tooltip" title="Mark Inactive" data-placement="bottom"
+                                               data-original-title="Mark Inactive"
+                                               href="{{ url_for('admin_nonactive_notification_page', nid=notification.id) }}"><i
+                                                    class="fas fa-bell-slash"></i></a> |
+                                        {% endif %}
+                                        <a rel="tooltip" title="Delete Notification" data-placement="bottom"
+                                           data-original-title="Delete Notification"
+                                           href="{{ url_for('admin_delete_notification_page', nid=notification.id) }}"><i
+                                                class="fas fa-times"></i></a>
+                                    </td>
+                                    <td>{{ notification.id }}</td>
+                                    <td>{{ notification.short_desc|safe }}</td>
+                                    <td>
+                                        {% if notification.active == 1 %}
+                                            <span class="text-success">Yes</span>
+                                        {% else %}
+                                            <span class="text-danger">No</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><pre>{{ notification.long_desc|safe }}</pre></td>
+                                    <td>{{ notification.time_created|datetime }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,321 @@
+{% extends "layouts/dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-4 order-md-last">
+            <div class="card card-user">
+                <div class="image">
+                    <img src="{{ url_for('static', filename='img/'+page.cover) }}" alt="Cover Picture">
+                </div>
+                <div class="card-body">
+                    <div class="author">
+                        <a href="{{ url_for('user_page', username=user.username) }}">
+                            <img class="avatar border-gray" src="{{ user.avatar(128) }}" alt="User Avatar">
+                            <h5 class="title">{{ user.full_name }}</h5>
+                        </a>
+                        <p class="description">
+                            {{ user.user_name }}
+                        </p>
+                    </div>
+                    <p class="description text-center">
+                        {{ user.bio }}
+                    </p>
+                </div>
+                <hr>
+                <div class="button-container">
+                    <a href="https://github.com/{{ user.github }}" target="_blank"
+                       class="btn btn-neutral btn-icon btn-round btn-lg">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.kaggle.com/{{ user.kaggle }}" target="_blank"
+                       class="btn btn-neutral btn-icon btn-round btn-lg">
+                        <i class="fas fa-exchange-alt"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/{{ user.linkedin }}" target="_blank"
+                       class="btn btn-neutral btn-icon btn-round btn-lg">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 order-md-first">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="title">Edit Profile</h5>
+                </div>
+                <div class="card-body">
+                    {% if profile_form.errors %}
+                        <div class="alert alert-danger text-left">
+                            {% for field_name, field_errors in profile_form.errors|dictsort if field_errors %}
+                                {% for error in field_errors %}
+                                    <p>{{ profile_form[field_name].label(class_='text-success') }}: {{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% with message = get_flashed_messages(category_filter=["pr_message"]) %}
+                        {% if message %}
+                            <div class="alert alert-success text-center">
+                                {% for msg in message %}
+                                    <p>
+                                        {{ msg }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    {% with message = get_flashed_messages(category_filter=["pr_error"]) %}
+                        {% if message %}
+                            <div class="alert alert-danger text-center">
+                                {% for msg in message %}
+                                    <p>
+                                        {{ msg }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <form class="form" method="post" action="{{ url_for("update_user_profile") }}">
+                        {{ profile_form.csrf_token }}
+                        <div class="row">
+                            <div class="col-md-5 pr-1">
+                                <div class="form-group">
+                                    <label>Email (cannot be changed)</label>
+                                    <input type="email" class="form-control" disabled="" placeholder="Email"
+                                           value="{{ user.email }}">
+                                </div>
+                            </div>
+                            <div class="col-md-3 px-1">
+                                <div class="form-group">
+                                    {{ profile_form.username.label }}
+                                    {{ profile_form.username(class_="form-control", value=user.username) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4 pl-1">
+                                <div class="form-group">
+                                    {{ profile_form.full_name.label }}
+                                    {{ profile_form.full_name(class_="form-control", value=user.full_name) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    {{ profile_form.first_name.label }}
+                                    {{ profile_form.first_name(class_="form-control", value=user.first_name) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 pl-1">
+                                <div class="form-group">
+                                    {{ profile_form.last_name.label }}
+                                    {{ profile_form.last_name(class_="form-control", value=user.last_name) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    {{ profile_form.website.label }}
+                                    {{ profile_form.website(class_="form-control", value=user.website) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 px-1">
+                                <div class="form-group">
+                                    {{ profile_form.country.label }}
+                                    {{ profile_form.country(class_="form-control", value=user.country) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ profile_form.github.label }}
+                                    {{ profile_form.github(class_="form-control", value=user.github) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ profile_form.kaggle.label }}
+                                    {{ profile_form.kaggle(class_="form-control", value=user.kaggle) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ profile_form.linkedin.label }}
+                                    {{ profile_form.linkedin(class_="form-control", value=user.linkedin) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    {{ profile_form.bio.label }}
+                                    {{ profile_form.bio(class_="form-control") }}
+                                    <script>
+                                        bio = document.getElementById('bio');
+                                        bio.innerHTML = '{{ user.bio }}';
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <small>* To change your profile picture, please update your avatar at <a
+                                            href="https://gravatar.com/">https://gravatar.com/</a>.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                {{ profile_form.save(class_='btn btn-danger btn-round') }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 order-md-first">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="title">Password Reset</h5>
+                </div>
+                <div class="card-body">
+                    {% if reset_pass_form.errors %}
+                        <div class="alert alert-danger text-left">
+                            {% for field_name, field_errors in reset_pass_form.errors|dictsort if field_errors %}
+                                {% for error in field_errors %}
+                                    <p>{{ reset_pass_form[field_name].label(class_='text-success') }}: {{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% with message = get_flashed_messages(category_filter=["rp_message"]) %}
+                        {% if message %}
+                            <div class="alert alert-success text-center">
+                                {% for msg in message %}
+                                    <p>
+                                        {{ msg }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    {% with message = get_flashed_messages(category_filter=["rp_error"]) %}
+                        {% if message %}
+                            <div class="alert alert-danger text-center">
+                                {% for msg in message %}
+                                    <p>
+                                        {{ msg }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <form class="form" method="post" action="{{ url_for("update_profile_password") }}">
+                        {{ reset_pass_form.csrf_token }}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    {{ reset_pass_form.old_password.label }}
+                                    {{ reset_pass_form.old_password(class_='form-control') }}
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    {{ reset_pass_form.new_password.label }}
+                                    {{ reset_pass_form.new_password(class_='form-control') }}
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    {{ reset_pass_form.repeat_new_password.label }}
+                                    {{ reset_pass_form.repeat_new_password(class_='form-control') }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                {{ reset_pass_form.reset(class_='btn btn-danger btn-round') }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 order-md-last">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="title text-danger">Account Deactivation</h5>
+                </div>
+                <div class="card-body">
+                    {% if account_deactivate_form.errors %}
+                        <div class="alert alert-danger text-left">
+                            {% for field_name, field_errors in account_deactivate_form.errors|dictsort if field_errors %}
+                                {% for error in field_errors %}
+                                    <p>{{ account_deactivate_form[field_name].label(class_='text-success') }}: {{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% with message = get_flashed_messages(category_filter=["ad_message"]) %}
+                        {% if message %}
+                            <div class="alert alert-success text-center">
+                                {% for msg in message %}
+                                    <p>
+                                        {{ msg }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    {% with message = get_flashed_messages(category_filter=["ad_error"]) %}
+                        {% if message %}
+                            <div class="alert alert-danger text-center">
+                                {% for msg in message %}
+                                    <p>
+                                        {{ msg }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <form method="post" action="{{ url_for("deactivate_account") }}">
+                        {{ account_deactivate_form.csrf_token }}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="alert alert-danger text-uppercase">
+                                    Please Type <b>DEACTIVATE</b> in the below field and Click on the <b>DEACTIVATE
+                                    ACCOUNT</b>.<br>
+                                    Note: This action is permanent and the account once deactivated cannot be recovered.
+                                    Once you deactivate your account you cannot create account with your current email
+                                    again.
+                                </p>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    {{ account_deactivate_form.password.label }}
+                                    {{ account_deactivate_form.password(class_='form-control') }}
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    {{ account_deactivate_form.confirmation.label }}
+                                    {{ account_deactivate_form.confirmation(class_='form-control') }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                {{ account_deactivate_form.reset(class_='btn btn-danger btn-round') }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

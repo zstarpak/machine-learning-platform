@@ -1,0 +1,246 @@
+{% extends "layouts/dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Multiple Linear Regression
+                        <small class="card-category"> - Car Price Prediction</small>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p id="chart-1"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p id="chart-2"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p id="chart-3"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p id="chart-4"></p>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            var graph_1 = {{mlr.chart_1 | safe}};
+                            var graph_2 = {{mlr.chart_2 | safe}};
+                            var graph_3 = {{mlr.chart_3 | safe}};
+                            var graph_4 = {{mlr.chart_4 | safe}};
+                            Plotly.plot(
+                                'chart-1',
+                                graph_1,
+                                {{ mlr.chart_1_layout | safe }},
+                                {
+                                    showLink: false,
+                                    displaylogo: false,
+                                    showAxisDragHandles: false
+                                }
+                            );
+                            Plotly.plot(
+                                'chart-2',
+                                graph_2,
+                                {{ mlr.chart_2_layout | safe }},
+                                {
+                                    showLink: false,
+                                    displaylogo: false,
+                                    showAxisDragHandles: false
+                                }
+                            );
+                            Plotly.plot(
+                                'chart-3',
+                                graph_3,
+                                {{ mlr.chart_3_layout | safe }},
+                                {
+                                    showLink: false,
+                                    displaylogo: false,
+                                    showAxisDragHandles: false
+                                }
+                            );
+                            Plotly.plot(
+                                'chart-4',
+                                graph_4,
+                                {{ mlr.chart_4_layout | safe }},
+                                {
+                                    showLink: false,
+                                    displaylogo: false,
+                                    showAxisDragHandles: false
+                                }
+                            );
+                        });
+                    </script>
+                    <h4>Accuracy : </h4>
+                    {% if mlr.accuracy >= 80 %}
+                        <p class="lead text-success text-capitalize">High ( >= 80% ) : {{ mlr.accuracy }}%</p>
+                        <p class="text-success">The model is providing high accuracy and is suitable for prediction.</p>
+                    {% elif mlr.accuracy >= 50 %}
+                        <p class="lead text-warning text-capitalize">Medium ( >= 50% ) : {{ mlr.accuracy }}%</p>
+                        <p class="text-warning">The model is providing medium accuracy and so it should be tuned or the
+                            training data should be increased before prediction.</p>
+                    {% else %}
+                        <p class="lead text-danger text-capitalize">Low ( < 50% ) : {{ mlr.accuracy }}%</p>
+                        <p class="text-danger">The model is providing low accuracy and is not suitable for prediction
+                            and so the training data should be increased or try changing the variable being used for
+                            training.</p>
+                    {% endif %}
+                    {% if mlrtf.errors %}
+                        <div class="alert alert-danger text-center">
+                            <ul class="errors">
+                                {% for field_name, field_errors in mlrtf.errors|dictsort if field_errors %}
+                                    {% for error in field_errors %}
+                                        <li>{{ mlrtf[field_name].label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <form class="form" method="post" action="{{ url_for('multiple_linear_reg_page') }}">
+                        {{ mlrtf.csrf_token }}
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                {{ mlrtf.feature_1.label }}
+                                {{ mlrtf.feature_1(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                {{ mlrtf.feature_2.label }}
+                                {{ mlrtf.feature_2(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                {{ mlrtf.feature_3.label }}
+                                {{ mlrtf.feature_3(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-3">
+                                {{ mlrtf.feature_4.label }}
+                                {{ mlrtf.feature_4(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-12">
+                                {{ mlrtf.label.label }}
+                                {{ mlrtf.label(class_='form-control') }}
+                            </div>
+                        </div>
+                        <p>
+                            {{ mlrtf.train(class_='btn btn-danger btn-round') }}
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Intercept</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ mlr.intercept }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Slope</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{% for slope in mlr.slope %}
+                        {{ slope }}
+                    {% endfor %}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">R<sup>2</sup></h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ mlr.r2 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">MSQE</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ mlr.msqe }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h2 class="card-title">Training Data</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Actual Price</h3>
+                    <div style="height: 10rem;" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ mlr.X1_Label }} (X1)</th>
+                                <th>{{ mlr.X2_Label }} (X2)</th>
+                                <th>{{ mlr.X3_Label }} (X3)</th>
+                                <th>{{ mlr.X4_Label }} (X4)</th>
+                                <th>Actual Price (Y)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for x1,x2,x3,x4,y in mlr.X1|zip(mlr.X2, mlr.X3, mlr.X4, mlr.Y) %}
+                                <tr>
+                                    <td>{{ x1 }}</td>
+                                    <td>{{ x2 }}</td>
+                                    <td>{{ x3 }}</td>
+                                    <td>{{ x4 }}</td>
+                                    <td>{{ y }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h2 class="card-title">Predicted Data</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Predicted Price</h3>
+                    <div style="height: 10rem;" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ mlr.X1_Label }} (X1)</th>
+                                <th>{{ mlr.X2_Label }} (X2)</th>
+                                <th>{{ mlr.X3_Label }} (X3)</th>
+                                <th>{{ mlr.X4_Label }} (X4)</th>
+                                <th>Predicted Price (Z)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for x1,x2,x3,x4,z in mlr.X1|zip(mlr.X2, mlr.X3, mlr.X4, mlr.Predicted) %}
+                                <tr>
+                                    <td>{{ x1 }}</td>
+                                    <td>{{ x2 }}</td>
+                                    <td>{{ x3 }}</td>
+                                    <td>{{ x4 }}</td>
+                                    <td>{{ z }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

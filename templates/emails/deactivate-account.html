@@ -1,0 +1,26 @@
+<h4>Dear {{ user.full_name }},</h4>
+<p>
+    Your account for the {{ user.email }} has been <b>deactivated</b> on {{ user.time_updated|datetime }} after we received your
+    account deactivation request. It's really sad to see you go like this. If you had any complains/suggestions, you can
+    contact us at {{ url_for("contact_page") }} and reply to this email to re-activate your account.
+</p>
+<p>
+    If you have not deactivated your password and think this is a malicious attempt, then please reply to this email to
+    report to us and we'll help you recover your account.
+</p>
+<p>
+    <b>Details:</b><br>
+    Name: {{ user.full_name }}<br>
+    Email: {{ user.email }}<br>
+    Password: <i>Your Chosen Password</i><br>
+    Time : {{ user.time_updated|datetime }}<br>
+    Status: Deactivated
+</p>
+<p>Sincerely,</p>
+<p>The ML Platform</p>
+<p>
+    <small>This email is intended for {{ user.email }} because this email was used for creating an account at ML
+        Platform. If you believe you did not create this account please reply to this email
+        with the letting us know that this was a spam.
+    </small>
+</p>

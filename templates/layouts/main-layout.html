@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+
+<head>
+    <meta charset="utf-8"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for ('static', filename='img/icon.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for ('static', filename='img/icon.png') }}">
+    <meta name="google-site-verification" content="i_bO_e7sz6rCIzETrMsR-neNSUjbIQN-ifE4ZU7Dieg"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>{{ page.title }} - ML Platform</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+          name='viewport'/>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="{{ url_for ('static', filename='css/now-ui-kit.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for ('static', filename='css/main.css') }}" rel="stylesheet"/>
+
+</head>
+
+<body class="{{ page.class }}"
+      style="height: 100%;padding-top: 80px;background-image: url('{{ url_for('static', filename='img/main-banner.png') }}');background-position: center;background-size: cover;background-attachment: fixed;">
+
+<nav class="navbar navbar-expand-lg bg-primary fixed-top" color-on-scroll="50">
+    <div class="container">
+        <div class="navbar-translate">
+            <a class="navbar-brand" href="/" rel="tooltip" title="Home Page - ML Platform" data-placement="bottom">
+                ML Platform
+            </a>
+            <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+                    aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navigation"
+             data-nav-image="../assets/img/blurred-image-1.jpg">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" rel="tooltip" title="" data-placement="bottom"
+                       href="{{ url_for('home_page') }}"
+                       data-original-title="Homepage">
+                        <i class="fas fa-home"></i>&nbsp;Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" rel="tooltip" title="" data-placement="bottom"
+                       href="{{ url_for('dashboard_home_page') }}"
+                       data-original-title="Go To Dashboard">
+                        <i class="fas fa-chart-area" aria-hidden="true"></i>&nbsp;Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" rel="tooltip" title="" data-placement="bottom"
+                       href="{{ url_for('signup_page') }}"
+                       data-original-title="Register For An Account">
+                        <i class="fas fa-user-plus"></i>&nbsp;Join
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" rel="tooltip" title="" data-placement="bottom"
+                       href="{{ url_for('contact_page') }}"
+                       data-original-title="Contact Us For Your Feedback">
+                        <i class="fas fa-phone" aria-hidden="true"></i>&nbsp;Contact
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" rel="tooltip" title="" data-placement="bottom"
+                       href="{{ url_for('about_page') }}"
+                       data-original-title="About Us - Who Are We?">
+                        <i class="fas fa-users" aria-hidden="true"></i>&nbsp;About Us
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid flex align-items-center justify-content-center" style="height: 100%">
+    {% block body %}
+
+    {% endblock body %}
+</div>
+<div class="wrapper">
+    <footer class="footer footer-default text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <nav>
+                        <ul class="nav nav-justified">
+                            <li>
+                                <a href="{{ url_for('home_page') }}">
+                                    Home
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('about_page') }}">
+                                    About Us
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('tac_page') }}">
+                                    Terms and Conditions
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('privacy_page') }}">
+                                    Privacy Policy
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-sm-6">
+                    <div class="copyright">
+                        &copy;
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script>
+                        Ali Raza. All rights reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+</body>
+<!--   Core JS Files   -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<!-- Google Analytics Code -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-98132730-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-98132730-2');
+</script>
+
+<!-- Google AdSense Code -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-1714675707300780",
+        enable_page_level_ads: true
+    });
+</script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="{{ url_for ('static', filename='js/plugins/bootstrap-switch.js') }}"></script>
+<!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+<script src="{{ url_for ('static', filename='js/plugins/nouislider.min.js') }}" type="text/javascript"></script>
+<!--  Plugin for the DatePicker, full documentation here: https://github.com/uxsolutions/bootstrap-datepicker -->
+<script src="{{ url_for ('static', filename='js/plugins/bootstrap-datepicker.js') }}" type="text/javascript"></script>
+<!-- Control Center for Now Ui Kit: parallax effects, scripts for the example pages etc -->
+<script src="{{ url_for ('static', filename='js/now-ui-kit.js') }}" type="text/javascript"></script>
+</html>

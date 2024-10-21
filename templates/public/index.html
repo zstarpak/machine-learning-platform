@@ -1,0 +1,14 @@
+{% extends "layouts/main-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 text-md-left text-center">
+            <h1 class="title">Welcome To ML Platform.</h1>
+            <h4>Build and Play With The Machines Who Actually Learns.</h4>
+            <br>
+            <a href="{{ url_for('signin_page') }}" class="btn btn-danger btn-raised btn-lg">
+                <i class="fa fa-fighter-jet" aria-hidden="true"></i>&nbsp; Get Started Now
+            </a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "layouts/dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h3 class="card-title">Supervised Learning: Regression</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="card card-chart col-md-6">
+                            <a href="{{ url_for('linear_reg_page') }}">
+                                <img class="card-img-top" src="data:image/png;base64,{{ data.lr.chart }}"
+                                     alt="Linear Regression Plot">
+                                <div class="card-header">
+                                    <h4 class="card-title">Linear Regression</h4>
+                                </div>
+                            </a>
+                            <div class="card-body text-capitalize">
+                                <p class="lead">Applying Linear Regression To Predict CO<sub>2</sub> Emission from Cars.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card card-chart col-md-6">
+                            <a href="{{ url_for('multiple_linear_reg_page') }}">
+                                <img class="card-img-top" src="data:image/png;base64,{{ data.mlr.chart }}"
+                                     alt="Multiple Linear Regression Plot">
+                                <div class="card-header">
+                                    <h4 class="card-title">Multiple Linear Regression</h4>
+                                </div>
+                            </a>
+                            <div class="card-body text-capitalize">
+                                <p class="lead">Applying Multiple Linear Regression To Predict the Car Prices.</p>
+                            </div>
+                        </div>
+                        <div class="card card-chart col-md-6">
+                            <a href="{{ url_for('polynomial_linear_reg_page') }}">
+                                <img class="card-img-top" src="data:image/png;base64,{{ data.plr.chart }}"
+                                     alt="Polynomial Linear Regression Plot">
+                                <div class="card-header">
+                                    <h4 class="card-title">Polynomial Linear Regression</h4>
+                                </div>
+                            </a>
+                            <div class="card-body text-capitalize">
+                                <p class="lead">Applying Polynomial Regression To Predict The GDP of Pakistan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h3 class="card-title">Supervised Learning: Classification</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="card card-chart col-md-6">
+                            <a href="{{ url_for('decision_trees_page') }}">
+                                <img class="card-img-top" src="data:image/png;base64,{{ data.dt.chart }}"
+                                     alt="Decision Trees Plot">
+                                <div class="card-header">
+                                    <h4 class="card-title">Decision Trees</h4>
+                                </div>
+                            </a>
+                            <div class="card-body text-capitalize">
+                                <p class="lead">Classifying The Different Types of Drugs For Patients.</p>
+                            </div>
+                        </div>
+                        <div class="card card-chart col-md-6">
+                            <a href="{{ url_for('knn_page') }}">
+                                <img class="card-img-top" src="data:image/png;base64,{{ data.knn.chart }}"
+                                     alt="K-NN Plot">
+                                <div class="card-header">
+                                    <h4 class="card-title">K-NN</h4>
+                                </div>
+                            </a>
+                            <div class="card-body text-capitalize">
+                                <p class="lead">Classifying Telecommunication Customers Type With KNN Algorithm.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h3 class="card-title">Unsupervised Learning: Clustering</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="card card-chart col-md-6">
+                            <a href="{{ url_for('kmean_page') }}">
+                                <img class="card-img-top" src="data:image/png;base64,{{ data.kmean.chart }}"
+                                     alt="K-Mean Plot">
+                                <div class="card-header">
+                                    <h4 class="card-title">K-Mean</h4>
+                                </div>
+                            </a>
+                            <div class="card-body text-capitalize">
+                                <p class="lead">Making Clusters of Telecommunication Customers Depending on Different
+                                    Attributes With K-Mean Algorithm.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

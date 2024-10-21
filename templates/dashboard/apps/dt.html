@@ -1,0 +1,150 @@
+{% extends "layouts/dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Decision Trees
+                        <small class="card-category"> - Patients Drug Classification</small>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <img class="img-fluid img-thumbnail" src="data:image/png;base64,{{ dt.chart }}"
+                                     alt="Decision Tree">
+                    <h4>Accuracy : </h4>
+                    {% if dt.accuracy >= 80 %}
+                        <p class="lead text-success text-capitalize">High ( >= 80% ) : {{ dt.accuracy }}%</p>
+                        <p class="text-success">The model is providing high accuracy and is suitable for prediction.</p>
+                    {% elif dt.accuracy >= 50 %}
+                        <p class="lead text-warning text-capitalize">Medium ( >= 50% ) : {{ dt.accuracy }}%</p>
+                        <p class="text-warning">The model is providing medium accuracy and so it should be tuned or the
+                            training data should be increased before prediction.</p>
+                    {% else %}
+                        <p class="lead text-danger text-capitalize">Low ( < 50% ) : {{ dt.accuracy }}%</p>
+                        <p class="text-danger">The model is providing low accuracy and is not suitable for prediction
+                            and so the training data should be increased or try changing the variable being used for
+                            training.</p>
+                    {% endif %}
+                    {% if dttf.errors %}
+                        <div class="alert alert-danger text-center">
+                            <ul class="errors">
+                                {% for field_name, field_errors in dttf.errors|dictsort if field_errors %}
+                                    {% for error in field_errors %}
+                                        <li>{{ dttf[field_name].label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <form class="form" method="post" action="{{ url_for('decision_trees_page') }}">
+                        {{ dttf.csrf_token }}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                {{ dttf.test_size.label }}
+                                {{ dttf.test_size(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{ dttf.max_depth.label }}
+                                {{ dttf.max_depth(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{ dttf.label.label }}
+                                {{ dttf.label(class_='form-control') }}
+                            </div>
+                        </div>
+                        <p>
+                            {{ dttf.train(class_='btn btn-danger btn-round') }}
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">R<sup>2</sup></h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ dt.r2 }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h2 class="card-title">Training Data</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Actual Type</h3>
+                    <div style="height: 10rem;" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>Age (X1)</th>
+                                <th>Sex (X2)</th>
+                                <th>BP (X3)</th>
+                                <th>Cholesterol (X4)</th>
+                                <th>Na_to_K (X5)</th>
+                                <th>Drug (Y)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for x1,x2,x3,x4,x5,y in dt.x1|zip(dt.x2, dt.x3, dt.x4, dt.x5, dt.y) %}
+                                <tr>
+                                    <td>{{ x1 }}</td>
+                                    <td>{{ x2 }}</td>
+                                    <td>{{ x3 }}</td>
+                                    <td>{{ x4 }}</td>
+                                    <td>{{ x5 }}</td>
+                                    <td>{{ y }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h2 class="card-title">Predicted Data</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Predicted Type</h3>
+                    <div style="height: 10rem;" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>Age (X1)</th>
+                                <th>Sex (X2)</th>
+                                <th>BP (X3)</th>
+                                <th>Cholesterol (X4)</th>
+                                <th>Na_to_K (X5)</th>
+                                <th>Drug (Z)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for x1,x2,x3,x4,x5,z in dt.tx1|zip(dt.tx2, dt.tx3, dt.tx4, dt.tx5, dt.Predicted) %}
+                                <tr>
+                                    <td>{{ x1 }}</td>
+                                    <td>{{ x2 }}</td>
+                                    <td>{{ x3 }}</td>
+                                    <td>{{ x4 }}</td>
+                                    <td>{{ x5 }}</td>
+                                    <td>{{ z }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "layouts/dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Linear Regression <small class="card-category"> - Co<sub>2</sub> Emission Prediction From Cars</small></h4>
+                </div>
+                <div class="card-body">
+                    <p id="chart"></p>
+                    <script>
+                        $(document).ready(function () {
+                            var graph = {{lr.plot | safe}};
+
+                            Plotly.plot(
+                                'chart',
+                                graph,
+                                {{ lr.plot_layout | safe }},
+                                {
+                                    showLink: false,
+                                    displaylogo: false,
+                                    showAxisDragHandles: false
+                                }
+                            );
+                        });
+                    </script>
+                    <h4>Accuracy : </h4>
+                    {% if lr.accuracy >= 80 %}
+                        <p class="lead text-success text-capitalize">High ( > 80% ) : {{ lr.accuracy }}%</p>
+                        <p class="text-success">The model is providing high accuracy and is suitable for prediction.</p>
+                    {% elif lr.accuracy >= 50 %}
+                        <p class="lead text-warning text-capitalize">Medium ( > 50% ) : {{ lr.accuracy }}%</p>
+                        <p class="text-warning">The model is providing medium accuracy and so it should be tuned or the
+                            training data should be increased before prediction.</p>
+                    {% else %}
+                        <p class="lead text-danger text-capitalize">Low ( < 50% ) : {{ lr.accuracy }}%</p>
+                        <p class="text-danger">The model is providing low accuracy and is not suitable for prediction
+                            and so the training data should be increased or try changing the variable being used for
+                            training.</p>
+                    {% endif %}
+                    {% if lrtf.errors %}
+                        <div class="alert alert-danger text-center">
+                            <ul class="errors">
+                                {% for field_name, field_errors in lrtf.errors|dictsort if field_errors %}
+                                    {% for error in field_errors %}
+                                        <li>{{ lrtf[field_name].label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <form class="form" method="post" action="{{ url_for('linear_reg_page') }}">
+                        {{ lrtf.csrf_token }}
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                {{ lrtf.feature.label }}
+                                {{ lrtf.feature(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {{ lrtf.label.label }}
+                                {{ lrtf.label(class_='form-control') }}
+                            </div>
+                        </div>
+                        <p>
+                            {{ lrtf.train(class_='btn btn-danger btn-round') }}
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Intercept</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ lr.intercept }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Slope</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{% for slope in lr.slope %}
+                        {{ slope }}
+                    {% endfor %}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">R<sup>2</sup></h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ lr.r2 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">MSQE</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ lr.msqe }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h2 class="card-title">Training Data</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Actual Price</h3>
+                    <div style="height: 10rem;" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ lr.X_label }} (X)</th>
+                                <th>Actual CO<sub>2</sub> Emission (Z)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for x,y in lr.X|zip(lr.Y) %}
+                                <tr>
+                                    <td>{{ x }}</td>
+                                    <td>{{ y }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h2 class="card-title">Predicted Data</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Predicted Price</h3>
+                    <div style="height: 10rem;" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ lr.X_label }} (X)</th>
+                                <th>Predicted CO<sub>2</sub> Emission (Z)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for x,z in lr.X|zip(lr.Predicted) %}
+                                <tr>
+                                    <td>{{ x }}</td>
+                                    <td>{{ z }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
