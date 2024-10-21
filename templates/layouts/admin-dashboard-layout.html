@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <meta name="google-site-verification" content="i_bO_e7sz6rCIzETrMsR-neNSUjbIQN-ifE4ZU7Dieg" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>
+        {{ page.title }} - Admin ML Platform
+    </title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+          name='viewport'/>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="{{ url_for('static', filename='css/now-ui-dashboard.css') }}" rel="stylesheet"/>
+</head>
+
+<body class="dashboard {{ page.class }}">
+<div class="wrapper ">
+    <div class="sidebar" data-color="red">
+        <!--
+          Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
+      -->
+        <div class="logo">
+            <a href="{{ url_for('home_page') }}" class="simple-text logo-mini">
+                Mp
+            </a>
+            <a href="{{ url_for('home_page') }}" class="simple-text logo-normal">
+                ML Platform
+            </a>
+        </div>
+        <div class="sidebar-wrapper">
+            <ul class="nav">
+                <li>
+                    <a href="{{ url_for('admin_dashboard_home_page') }}">
+                        <i class="now-ui-icons design_app"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li>
+                    <a href="{{ url_for('admin_users_page') }}">
+                        <i class="now-ui-icons users_circle-08"></i>
+                        <p>Users</p>
+                    </a>
+                    <ul class="nav">
+                        <li>
+                            <a href="{{ url_for('admin_deactivated_users_page') }}">
+                                <i class="now-ui-icons ui-1_lock-circle-open"></i>
+                                <p>Deactivated Users</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('admin_unverified_users_page') }}">
+                                <i class="now-ui-icons gestures_tap-01"></i>
+                                <p>Unverified Users</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li>
+                    <a href="{{ url_for('admin_notifications_page') }}">
+                        <i class="now-ui-icons ui-1_bell-53"></i>
+                        <p>Notification</p>
+                    </a>
+                    <ul class="nav">
+                        <li>
+                            <a href="{{ url_for('admin_add_notification_page') }}">
+                                <i class="now-ui-icons ui-1_simple-add"></i>
+                                <p>Add Notifications</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li>
+                    <a href="{{ url_for('admin_messages_page') }}">
+                        <i class="now-ui-icons ui-1_email-85"></i>
+                        <p>Messages</p>
+                    </a>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li>
+                    <a href="{{ url_for('admin_logout_page') }}">
+                        <i class="now-ui-icons media-1_button-power"></i>
+                        <p>Logout</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-panel">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-transparent  navbar-absolute bg-primary fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-wrapper">
+                    <div class="navbar-toggle">
+                        <button type="button" class="navbar-toggler">
+                            <span class="navbar-toggler-bar bar1"></span>
+                            <span class="navbar-toggler-bar bar2"></span>
+                            <span class="navbar-toggler-bar bar3"></span>
+                        </button>
+                    </div>
+                    <a class="navbar-brand" href="#">{{ page.title }}</a>
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+                        aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-bar navbar-kebab"></span>
+                    <span class="navbar-toggler-bar navbar-kebab"></span>
+                    <span class="navbar-toggler-bar navbar-kebab"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navigation">
+                    <form>
+                        <div class="input-group no-border">
+                            <input type="text" value="" class="form-control" placeholder="Search...">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <i class="now-ui-icons ui-1_zoom-bold"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_dashboard_home_page') }}">
+                                <i class="now-ui-icons users_single-02"></i>
+                                <p>
+                                    <span class="d-lg-none d-md-block">Profile</span>
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- End Navbar -->
+        <div class="panel-header panel-header-sm">
+        </div>
+        <div class="content">
+            {% block body %}
+
+            {% endblock body %}
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav>
+                    <ul class="nav nav-justified">
+                        <li>
+                            <a href="{{ url_for('admin_dashboard_home_page') }}">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('about_page') }}">
+                                About Us
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('tac_page') }}">
+                                Terms and Conditions
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('privacy_page') }}">
+                                Privacy Policy
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="copyright">
+                    &copy;
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script>
+                    Ali Raza. All rights reserved.
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<!--   Core JS Files   -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
+<!-- Chart JS -->
+<script src="{{ url_for('static', filename='js/plugins/chartjs.min.js') }}"></script>
+<!--  Notifications Plugin    -->
+<script src="{{ url_for('static', filename='js/plugins/bootstrap-notify.js') }}"></script>
+<!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="{{ url_for('static', filename='js/now-ui-dashboard.min.js') }}" type="text/javascript"></script>
+</body>
+
+</html>

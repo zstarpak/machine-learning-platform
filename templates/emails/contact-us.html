@@ -1,0 +1,27 @@
+<h4>Dear {{ user.name|safe }},</h4>
+<p>
+    Your message has been received to us on {{ user.time_updated|datetime }} after you
+    sent us the message via Contact Page Form. If you have any more queries regarding anything related to ML Platform,
+    you can
+    contact us at {{ url_for("contact_page") }} or reply to this email. We'll look into your query and reply to you
+    within 2 to 3 business days.
+</p>
+<p>
+    If you think this you have not sent us any message and someone else has used your email you can lets us know by
+    replying to this email about this matter.
+</p>
+<p>
+    <b>Details:</b><br>
+    Name: {{ user.name|safe }}<br>
+    Email: {{ user.email|safe }}<br>
+    Message: <pre>{{ user.message|safe }}</pre>
+    Time : {{ user.time_created|datetime }}<br>
+</p>
+<p>Sincerely,</p>
+<p>The ML Platform</p>
+<p>
+    <small>This email is intended for {{ user.email|safe }} because this email was used to send us a message on Contact US page at ML
+        Platform. If you believe you did not used your email please reply to this email
+        with the letting us know that this was a spam.
+    </small>
+</p>

@@ -1,0 +1,53 @@
+{% extends "layouts/user-layout.html" %}
+
+{% block body %}
+    <div class="page-header page-header-small" filter-color="orange">
+        <div class="page-header-image" data-parallax="true"
+             style="background-image: url({{ url_for('static', filename='img/'+page.cover) }}); transform: translate3d(0px, 0px, 0px);">
+        </div>
+        <div class="container">
+            <div class="content-center">
+                <div class="photo-container">
+                    <img src="{{ user.avatar(128) }}" alt="Profile Picture">
+                </div>
+                <h3 class="title">{{ user.full_name }}</h3>
+                <p class="category text-lowercase">{{ user.username }}</p>
+                <div class="content">
+                    <div class="social-description">
+                        <h2>{{ user.country }}</h2>
+                        <p>Country</p>
+                    </div>
+                    <div class="social-description">
+                        <h2>{{ user.website }}</h2>
+                        <p>Website</p>
+                    </div>
+                </div>
+                <div class="container">
+                    <a href="https://github.com/{{ user.github }}" target="_blank"
+                       class="btn btn-danger btn-round" rel="tooltip" title=""
+                       data-original-title="Github">
+                        <i class="fa fa-github"></i> Github
+                    </a>
+                    <a href="https://www.kaggle.com/{{ user.kaggle }}" target="_blank"
+                       class="btn btn-danger btn-round" rel="tooltip" title=""
+                       data-original-title="Kaggle">
+                        <i class="fa fa-globe"></i> Kaggle
+                    </a>
+                    <a href="https://www.linkedin.com/in/{{ user.linkedin }}" target="_blank"
+                       class="btn btn-danger btn-round" rel="tooltip" title=""
+                       data-original-title="LinkedIn">
+                        <i class="fa fa-linkedin"></i> LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="container">
+            <h3 class="title">About me</h3>
+            <h5 class="description">
+                {{ user.bio }}
+            </h5>
+        </div>
+    </div>
+{% endblock %}

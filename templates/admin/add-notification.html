@@ -1,0 +1,74 @@
+{% extends "layouts/admin-dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Hi, {{ session['full_name'] }}</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p class="lead">Welcome to Your ML Platform Admin dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart text-center">
+                <div class="card-header">
+                    <h4 class="card-title text-success"><i class="fas fa-bell"></i> Add Notification</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    {% if nf.errors %}
+                        <div class="alert alert-danger text-center">
+                            <ul class="errors">
+                                {% for field_name, field_errors in nf.errors|dictsort if field_errors %}
+                                    {% for error in field_errors %}
+                                        <li>{{ nf[field_name].label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    {% with message = get_flashed_messages(category_filter=["message"]) %}
+                        {% if message %}
+                            <div class="alert alert-success text-center">
+                                {% for msg in message %}
+                                    <p>
+                                        {{ msg }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    {% with message = get_flashed_messages(category_filter=["error"]) %}
+                        {% if message %}
+                            <div class="alert alert-danger text-center">
+                                {% for msg in message %}
+                                    <p>
+                                        {{ msg }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <form class="form" method="post" action="{{ url_for('admin_add_notification_page') }}">
+                        {{ nf.csrf_token }}
+                        <div class="form-group">
+                            {{ nf.title.label }}
+                            {{ nf.title(class_='form-control') }}
+                        </div>
+                        <div class="form-group">
+                            {{ nf.description.label }}
+                            {{ nf.description(class_='form-control') }}
+                        </div>
+                        <div class="text-right">
+                            {{ nf.save(class_='btn btn-primary btn-round') }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

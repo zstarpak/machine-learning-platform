@@ -1,0 +1,169 @@
+{% extends "layouts/dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">K Nearest Neighbors
+                        <small class="card-category"> - Telecommunication Customers' Type Classification</small>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p id="chart-1"></p>
+                    <p id="chart-2"></p>
+                    <script>
+                        $(document).ready(function () {
+                            var graph = {{knn.chart_1 | safe}};
+                            var graph_2 = {{knn.chart_2 | safe}};
+
+                            Plotly.plot('chart-1', graph, {{ knn.chart_1_layout | safe }}, {
+                                showLink: false,
+                                displaylogo: false,
+                                showAxisDragHandles: false
+                            });
+                            Plotly.plot('chart-2', graph_2, {{ knn.chart_2_layout | safe }}, {
+                                showLink: false,
+                                displaylogo: false,
+                                showAxisDragHandles: false
+                            });
+                        });
+                    </script>
+                    <h4>Accuracy : </h4>
+                    {% if knn.accuracy >= 80 %}
+                        <p class="lead text-success text-capitalize">High ( >= 80% ) : {{ knn.accuracy }}%</p>
+                        <p class="text-success">The model is providing high accuracy and is suitable for prediction.</p>
+                    {% elif knn.accuracy >= 50 %}
+                        <p class="lead text-warning text-capitalize">Medium ( >= 50% ) : {{ knn.accuracy }}%</p>
+                        <p class="text-warning">The model is providing medium accuracy and so it should be tuned or the
+                            training data should be increased before prediction.</p>
+                    {% else %}
+                        <p class="lead text-danger text-capitalize">Low ( < 50% ) : {{ knn.accuracy }}%</p>
+                        <p class="text-danger">The model is providing low accuracy and is not suitable for prediction
+                            and so the training data should be increased or try changing the variable being used for
+                            training.</p>
+                    {% endif %}
+                    {% if knntf.errors %}
+                        <div class="alert alert-danger text-center">
+                            <ul class="errors">
+                                {% for field_name, field_errors in knntf.errors|dictsort if field_errors %}
+                                    {% for error in field_errors %}
+                                        <li>{{ knntf[field_name].label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <form class="form" method="post" action="{{ url_for('knn_page') }}">
+                        {{ knntf.csrf_token }}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                {{ knntf.feature_1.label }}
+                                {{ knntf.feature_1(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{ knntf.feature_2.label }}
+                                {{ knntf.feature_2(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{ knntf.k.label }}
+                                {{ knntf.k(class_='form-control') }}
+                            </div>
+                            <div class="form-group col-md-12">
+                                {{ knntf.label.label }}
+                                {{ knntf.label(class_='form-control') }}
+                            </div>
+                        </div>
+                        <p>
+                            {{ knntf.train(class_='btn btn-danger btn-round') }}
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">R<sup>2</sup></h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ knn.r2 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">MSQE</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p>{{ knn.msqe }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h2 class="card-title">Training Data</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Actual Type</h3>
+                    <div style="height: 10rem;" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ knn.X_Label }} (X1)</th>
+                                <th>{{ knn.Y_Label }} (X2)</th>
+                                <th>Type (Y)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for x1,x2,y in knn.X1|zip(knn.X2, knn.Y) %}
+                                <tr>
+                                    <td>{{ x1 }}</td>
+                                    <td>{{ x2 }}</td>
+                                    <td>{{ y }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h2 class="card-title">Predicted Data</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Predicted Type</h3>
+                    <div style="height: 10rem;" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ knn.X_Label }} (X1)</th>
+                                <th>{{ knn.Y_Label }} (X2)</th>
+                                <th>Predicted Type (Z)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for x,y, z in knn.X1|zip(knn.X2, knn.Predicted) %}
+                                <tr>
+                                    <td>{{ x }}</td>
+                                    <td>{{ y }}</td>
+                                    <td>{{ z }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

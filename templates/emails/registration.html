@@ -1,0 +1,38 @@
+<h4>Hi {{ user.full_name }},</h4>
+<p>
+    Thanks For Registration @ ML Platform. You account for the email {{ user.email }} has been created. Please click on
+    the following link tou verify your email address on ML Platform. Please note that unverified accounts are deleted
+    automatically after 5 days.
+</p>
+<div style="text-align: center;">
+    <a href="{{ url_for('verify_email', token=token, _external=True) }}">
+            Verify Email
+    </a>
+</div>
+<p>
+    Alternatively, you can paste the following link in your browser's address bar:
+</p>
+<p>
+    {{ url_for('verify_email', token=token, _external=True) }}
+</p>
+<p>
+    If you have not registered on the ML Platform and think someone else may have used your email address, Then you can
+    simply ignore this email.
+</p>
+<p>
+    <b>Details:</b><br>
+    Name: {{ user.full_name }}<br>
+    Email: {{ user.email }}<br>
+    Password: <i>Your Chosen Password</i><br>
+    Time : {{ user.time_created|datetime }}<br>
+    Verified: <i>No</i>
+
+</p>
+<p>Sincerely,</p>
+<p>The ML Platform</p>
+<p>
+    <small>This email is intended for {{ user.email }} because this email was used for creating an account at ML
+        Platform. If you believe you did not create this account please reply to this email
+        with the letting us know that this was a spam.
+    </small>
+</p>

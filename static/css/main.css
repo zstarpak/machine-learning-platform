@@ -1,0 +1,32 @@
+html, body {
+    height: 100% !important;
+}
+
+nav.navbar {
+    margin-bottom: 0 !important;
+}
+.section{
+    padding: 0 !important;
+}
+.card-plain{
+    margin-bottom: 0 !important;
+}
+.card-body{
+    padding-bottom: 0 !important;
+}
+body .container-fluid{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 80px !important;
+}
+.row{
+	width: 100% !important;
+}
+.card-deck{
+    margin-bottom: 1rem !important;
+}
+.dashboard .row > div[class*='col-'] {
+  display: flex;
+  flex:1 0 auto;
+}

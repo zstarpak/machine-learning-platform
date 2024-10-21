@@ -1,0 +1,37 @@
+{% extends "layouts/dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title"><i class="fas fa-bell"></i> Latest Notifications</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Notification</th>
+                                <th>Description</th>
+                                <th>By</th>
+                                <th>Dated</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for notification in notifications %}
+                                <tr>
+                                    <td>{{ notification.short_desc }}</td>
+                                    <td>{{ notification.long_desc }}</td>
+                                    <td>Admin</td>
+                                    <td>{{ notification.time_created|datetime }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

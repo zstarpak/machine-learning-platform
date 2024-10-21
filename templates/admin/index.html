@@ -1,0 +1,150 @@
+{% extends "layouts/admin-dashboard-layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title">Hi, {{ session['full_name'] }}</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p class="lead">Welcome to Your ML Platform Admin dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card card-chart text-info">
+                <div class="card-header">
+                    <h4 class="card-title"><i class="fas fa-users"></i> Total User</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p class="lead">{{ analytics.total_users|length }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-chart text-success">
+                <div class="card-header">
+                    <h4 class="card-title"><i class="fas fa-user-shield"></i> Active User</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p class="lead">{{ analytics.active_users|length }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-chart text-danger">
+                <div class="card-header">
+                    <h4 class="card-title"><i class="fas fa-user-lock"></i> Deactivated User</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p class="lead">{{ analytics.deactivated_users|length }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-chart text-warning">
+                <div class="card-header">
+                    <h4 class="card-title"><i class="fas fa-user-times"></i> Unverified User</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <p class="lead">{{ analytics.unverified_users|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title"><i class="fas fa-user-clock"></i> Latest Users</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Verified?</th>
+                                <th>Active?</th>
+                                <th>Registered At</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in analytics.latest_users %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.full_name|safe }}</td>
+                                    <td class="text-lowercase">{{ user.email }}</td>
+                                    <td>
+                                        {% if user.verified == 1 %}
+                                            <span class="text-success">Verified</span>
+                                        {% else %}
+                                            <span class="text-warning">Unverified</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if user.active == 1 %}
+                                            <span class="text-success">Active</span>
+                                        {% else %}
+                                            <span class="text-danger">Deactivated</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ user.time_created|datetime }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h4 class="card-title"><i class="fas fa-comment"></i> Latest Messages</h4>
+                </div>
+                <div class="card-body text-capitalize">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Responded</th>
+                                <th>IP</th>
+                                <th>Contacted At</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for message in analytics.latest_messages %}
+                                <tr>
+                                    <td>{{ message.id }}</td>
+                                    <td>{{ message.name|safe }}</td>
+                                    <td class="text-lowercase">{{ message.email }}</td>
+                                    <td>
+                                        {% if message.responded == 1 %}
+                                            <span class="text-success">Yes</span>
+                                        {% else %}
+                                            <span class="text-danger">No</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ message.ip|safe }}
+                                    </td>
+                                    <td>{{ message.time_created|datetime }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
